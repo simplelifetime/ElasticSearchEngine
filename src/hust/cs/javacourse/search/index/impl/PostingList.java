@@ -3,8 +3,11 @@ package hust.cs.javacourse.search.index.impl;
 import hust.cs.javacourse.search.index.AbstractPosting;
 import hust.cs.javacourse.search.index.AbstractPostingList;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -83,26 +86,46 @@ public class PostingList extends AbstractPostingList {
 
     @Override
     public void clear() {
-
+        list.clear();
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return list.isEmpty();
     }
 
     @Override
     public void sort() {
-
+        list.sort(new Comparator<AbstractPosting>() {
+            @Override
+            public int compare(AbstractPosting o1, AbstractPosting o2) {
+                return o1.getDocId()-o2.getDocId();
+            }
+        });
+        for(AbstractPosting curPosting:this.list){
+            curPosting.sort();
+        }
     }
 
     @Override
     public void writeObject(ObjectOutputStream out) {
-
+        try {
+            out.writeObject(list.size());
+            for(AbstractPosting abstractPosting:this.list)
+                out.writeObject(abstractPosting);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void readObject(ObjectInputStream in) {
-
+        try {
+            Integer size = (Integer)in.readObject();
+            for(int i=0;i<size;i++)
+                this.list.add((AbstractPosting) in.readObject());
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

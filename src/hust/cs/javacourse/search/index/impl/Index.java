@@ -5,6 +5,7 @@ import hust.cs.javacourse.search.index.*;
 import java.io.File;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -29,7 +30,35 @@ public class Index extends AbstractIndex {
      */
     @Override
     public void addDocument(AbstractDocument document) {
-
+        docIdToDocPathMapping.put(document.getDocId(),document.getDocPath());
+        List<AbstractTermTuple> curTermTuple = document.getTuples();
+        for(AbstractTermTuple abstractTermTuple:curTermTuple){
+            Term curTerm = (Term) abstractTermTuple.term;
+            PostingList curPostingList;
+            if(!termToPostingListMapping.containsKey(curTerm)){         //判断在倒挂索引中是否已存在该term
+                curPostingList= new PostingList();      //若没有，创建一个新的postingList
+            }
+            else{   //否则调用原来的Posting List
+                curPostingList = (PostingList) termToPostingListMapping.get(curTerm);
+            }
+            Posting curPosting;
+            if(curPostingList.indexOf(document.getDocId())!=-1) {
+                curPosting = (Posting) curPostingList.get(curPostingList.indexOf(document.getDocId()));
+                curPosting.setFreq(curPosting.getFreq()+1);
+                List<Integer> positions = curPosting.getPositions();
+                positions.add(abstractTermTuple.curPos);
+            }
+            else {
+                curPosting = new Posting();
+                curPosting.setDocId(document.getDocId());
+                curPosting.setFreq(1);
+                List<Integer> positions = new ArrayList<>();
+                positions.add(abstractTermTuple.curPos);
+                curPosting.setPositions(positions);
+            }
+            curPostingList.add(curPosting);
+            termToPostingListMapping.put(curTerm,curPostingList);
+        }
     }
 
     /**
@@ -40,7 +69,6 @@ public class Index extends AbstractIndex {
      */
     @Override
     public void load(File file) {
-
     }
 
     /**
@@ -62,7 +90,7 @@ public class Index extends AbstractIndex {
      */
     @Override
     public AbstractPostingList search(AbstractTerm term) {
-        return null;
+        return termToPostingListMapping.get(term);
     }
 
     /**
@@ -72,7 +100,7 @@ public class Index extends AbstractIndex {
      */
     @Override
     public Set<AbstractTerm> getDictionary() {
-        return null;
+        return termToPostingListMapping.keySet();
     }
 
     /**
@@ -85,7 +113,10 @@ public class Index extends AbstractIndex {
      */
     @Override
     public void optimize() {
-
+        for(AbstractTerm abstractTerm:this.getDictionary()){
+            PostingList curPostingList = (PostingList) termToPostingListMapping.get(abstractTerm);
+            curPostingList.sort();
+        }
     }
 
     /**
@@ -96,7 +127,7 @@ public class Index extends AbstractIndex {
      */
     @Override
     public String getDocName(int docId) {
-        return null;
+        return this.docIdToDocPathMapping.get(docId);
     }
 
     /**
