@@ -19,6 +19,7 @@ public class IndexBuilder extends AbstractIndexBuilder {
 
     @Override
     public AbstractIndex buildIndex(String rootDirectory) {
+        AbstractIndex abstractIndex = new Index();
         return null;
     }
 }

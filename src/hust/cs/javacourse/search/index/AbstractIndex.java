@@ -1,5 +1,7 @@
 package hust.cs.javacourse.search.index;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 import java.io.File;
 import java.util.Set;
@@ -53,7 +55,7 @@ public abstract class AbstractIndex implements FileSerializable{
      * @param file ：索引文件
      * </pre>
      */
-    public abstract void load(File file);
+    public abstract void load(File file) throws IOException;
 
     /**
      * <pre>
@@ -61,7 +63,7 @@ public abstract class AbstractIndex implements FileSerializable{
      * @param file ：写入的目标索引文件
      * </pre>
      */
-    public abstract void save(File file);
+    public abstract void save(File file) throws IOException;
 
     /**
      * 返回指定单词的PostingList
