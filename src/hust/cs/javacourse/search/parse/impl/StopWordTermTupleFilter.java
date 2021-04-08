@@ -3,6 +3,10 @@ package hust.cs.javacourse.search.parse.impl;
 import hust.cs.javacourse.search.index.AbstractTermTuple;
 import hust.cs.javacourse.search.parse.AbstractTermTupleFilter;
 import hust.cs.javacourse.search.parse.AbstractTermTupleStream;
+import hust.cs.javacourse.search.util.StopWords;
+
+import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * @ClassName: StopWordTermTupleFilter
@@ -24,7 +28,28 @@ public class StopWordTermTupleFilter extends AbstractTermTupleFilter {
     }
 
     @Override
-    public AbstractTermTuple next() {
-        return null;
+    public AbstractTermTuple next() throws IOException {
+        AbstractTermTuple curTermTuple= input.next();
+        if(curTermTuple==null)  return null;
+        String[] stopWords = StopWords.STOP_WORDS;
+        while(Arrays.binarySearch(stopWords,curTermTuple.term.getContent())>=0){
+            curTermTuple= input.next();
+            if(curTermTuple==null)  return null;
+        }
+        return curTermTuple;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

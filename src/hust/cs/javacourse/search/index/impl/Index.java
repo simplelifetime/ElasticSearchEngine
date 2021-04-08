@@ -146,7 +146,8 @@ public class Index extends AbstractIndex {
             out.writeObject(size2);
             for (AbstractTerm term : termToPostingListMapping.keySet()) {
                 term.writeObject(out);
-                termToPostingListMapping.get(term).writeObject(out);
+                AbstractPostingList abstractPostingList = termToPostingListMapping.get(term);
+                abstractPostingList.writeObject(out);
             }
             for (Integer docId : docIdToDocPathMapping.keySet()) {
                 out.writeObject(docId);
@@ -170,8 +171,10 @@ public class Index extends AbstractIndex {
             Integer size1 = (Integer) in.readObject();
             Integer size2 = (Integer) in.readObject();
             for (int i = 0; i < size1; i++) {
-                AbstractTerm curTerm = (AbstractTerm) in.readObject();
-                AbstractPostingList curPostingList = (AbstractPostingList) in.readObject();
+                AbstractTerm curTerm = new Term();
+                curTerm.readObject(in);
+                AbstractPostingList curPostingList = new PostingList();
+                curPostingList.readObject(in);
                 termToPostingListMapping.put(curTerm, curPostingList);
             }
             for (int i = 0; i < size2; i++) {

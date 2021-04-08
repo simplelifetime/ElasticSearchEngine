@@ -21,11 +21,11 @@ public class Posting extends AbstractPosting {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Posting) {
-            if(((Posting) obj).getDocId() == this.docId &&
-                    ((Posting) obj).getFreq() == this.freq){
-                for(int i=0;i<this.positions.size();i++){       //内容比较
-                    if(!this.positions.get(i).equals(((Posting) obj).getPositions().get(i))
-                    )   return false;
+            if (((Posting) obj).getDocId() == this.docId &&
+                    ((Posting) obj).getFreq() == this.freq) {
+                for (int i = 0; i < this.positions.size(); i++) {       //内容比较
+                    if (!this.positions.get(i).equals(((Posting) obj).getPositions().get(i))
+                    ) return false;
                 }
                 return true;
             }
@@ -35,10 +35,11 @@ public class Posting extends AbstractPosting {
 
     @Override
     public String toString() {
-        StringBuffer output = new StringBuffer("DocId:" + this.docId + "Freq:" + this.freq);
+        StringBuffer output = new StringBuffer("DocId:" + this.docId + "   " + "Freq:" + this.freq + "   ");
+        output.append("positions:");
         for (int i : positions) {
             output.append(i);
-            output.append(" ");
+            output.append("  ");
         }
         return output.toString();
     }
@@ -89,7 +90,7 @@ public class Posting extends AbstractPosting {
             out.writeObject(this.docId);
             out.writeObject(this.freq);
             out.writeObject(this.positions.size());
-            for(Integer i:this.positions)
+            for (Integer i : this.positions)
                 out.writeObject(i);
         } catch (IOException e) {
             e.printStackTrace();
@@ -99,12 +100,12 @@ public class Posting extends AbstractPosting {
     @Override
     public void readObject(ObjectInputStream in) {
         try {
-            this.docId = (Integer)in.readObject();
-            this.freq = (Integer)in.readObject();
-            Integer size = (Integer)in.readObject();
-            for(int i=0;i<size;i++)
+            this.docId = (Integer) in.readObject();
+            this.freq = (Integer) in.readObject();
+            Integer size = (Integer) in.readObject();
+            for (int i = 0; i < size; i++)
                 this.positions.add((Integer) in.readObject());
-         } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

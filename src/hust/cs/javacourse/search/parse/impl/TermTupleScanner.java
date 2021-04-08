@@ -32,15 +32,15 @@ public class TermTupleScanner extends AbstractTermTupleScanner {
     @Override
     public AbstractTermTuple next() throws IOException {
         String Line = input.readLine();
-        int pos = 1;
+        int pos = 0;
         while(Line!=null){
             Line = Line.trim();
             Line = Line.toLowerCase();
             StringSplitter splitter = new StringSplitter();
             splitter.setSplitRegex(STRING_SPLITTER_REGEX);
             List<String> words = splitter.splitByRegex(Line);
-            AbstractTermTuple curTermTuple = new TermTuple();
             for(String word:words){
+                AbstractTermTuple curTermTuple = new TermTuple();
                 AbstractTerm curTerm = new Term();
                 curTerm.setContent(word);
                 curTermTuple.term = curTerm;

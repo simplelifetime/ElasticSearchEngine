@@ -15,6 +15,14 @@ import java.io.ObjectOutputStream;
  */
 
 public class Term extends AbstractTerm {
+    public Term(){
+        super();
+    }
+
+    public Term(String content){
+        super(content);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Term) {

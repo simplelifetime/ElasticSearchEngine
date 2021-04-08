@@ -30,6 +30,7 @@ public class PostingList extends AbstractPostingList {
         StringBuffer output = new StringBuffer();
         for (AbstractPosting abstractPosting : this.list) {         //顺序查找
             output.append(abstractPosting.toString());
+            output.append("   ");
         }
         return output.toString();
     }
@@ -112,7 +113,7 @@ public class PostingList extends AbstractPostingList {
         try {
             out.writeObject(list.size());
             for(AbstractPosting abstractPosting:this.list)
-                out.writeObject(abstractPosting);
+                abstractPosting.writeObject(out);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -122,8 +123,11 @@ public class PostingList extends AbstractPostingList {
     public void readObject(ObjectInputStream in) {
         try {
             Integer size = (Integer)in.readObject();
-            for(int i=0;i<size;i++)
-                this.list.add((AbstractPosting) in.readObject());
+            for(int i=0;i<size;i++) {
+                AbstractPosting abstractPosting = new Posting();
+                abstractPosting.readObject(in);
+                this.list.add(abstractPosting);
+            }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

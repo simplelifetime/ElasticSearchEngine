@@ -4,6 +4,8 @@ import hust.cs.javacourse.search.index.AbstractIndex;
 import hust.cs.javacourse.search.index.AbstractTerm;
 import hust.cs.javacourse.search.index.impl.Index;
 
+import java.io.IOException;
+
 /**
  * <pre>
  *  AbstractIndexSearcher是检索具体实现的抽象类
@@ -23,7 +25,7 @@ public abstract class AbstractIndexSearcher {
         /**
          * 与,即多个检索词必须都在命中文档里出现
          */
-        ADN,
+        AND,
         /**
          * 或, 即任意一个检索词在命中文档里出现
          */
@@ -33,7 +35,7 @@ public abstract class AbstractIndexSearcher {
      * 从指定索引文件打开索引，加载到index对象里. 一定要先打开索引，才能执行search方法
      * @param indexFile ：指定索引文件
      */
-    public abstract void open(String indexFile);
+    public abstract void open(String indexFile) throws IOException;
 
     /**
      * 根据单个检索词进行搜索
